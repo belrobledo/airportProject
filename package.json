@@ -1,0 +1,19 @@
+{
+  "name": "airportproject",
+  "version": "1.0.0",
+  "description": "Airport Solvd personal project",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/belrobledo/airportProject.git"
+  },
+  "author": "Belen Robledo",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/belrobledo/airportProject/issues"
+  },
+  "homepage": "https://github.com/belrobledo/airportProject#readme"
+}
