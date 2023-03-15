@@ -2,7 +2,7 @@
 
 🛠 Work in Progress 🛠
 
-Airport ticketing web application built using Express.js and (MySQL/MongoDB), developed for Solvd NodeJS Internship Course. Allows users to buy flight tickets as well as get information about flights, routes and pricing.
+Airport ticketing web application built using Express.js and (MySQL/MongoDB), developed for Solvd NodeJS Internship Course. Allows users to buy flight tickets as well as get information about flights, routes and pricing. 
 
 ## Roles and functionalities 👨‍💻
 
