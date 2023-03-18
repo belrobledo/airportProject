@@ -1,0 +1,24 @@
+version: "2.1"
+
+networks:
+  airport-net:
+    driver: bridge
+
+services:
+  server:
+    container_name: server-container
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    depends_on:
+      - redis
+    networks:
+      - airport-net
+
+  redis:
+    container_name: redis-container
+    image: redis
+    networks:
+      - airport-net

@@ -1,0 +1,15 @@
+{
+  "name": "server-airportproject",
+  "version": "1.0.0",
+  "description": "Server-side for Airport Solvd personal project.",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "author": "Belen Robledo",
+  "license": "ISC",
+  "dependencies": {
+    "redis": "^4.6.5"
+  }
+}
