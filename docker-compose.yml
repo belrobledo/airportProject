@@ -14,11 +14,21 @@ services:
       - "3000:3000"
     depends_on:
       - redis
+    environment:
+      - REDIS_HOST=redis-container
+      - REDIS_PORT=6379
     networks:
       - airport-net
 
   redis:
     container_name: redis-container
     image: redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - "redisdata:/data"
     networks:
       - airport-net
+
+volumes:
+  redisdata:

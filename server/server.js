@@ -1,15 +1,16 @@
-const http = require('http');
+const express = require('express');
+const bodyParser = require('body-parser');
+const router = require('./routes/authRoutes');
+
+const app = express();
 const port = 3000;
 
-const server = http.createServer( (req, res) => {
-    res.setHeader('Content-Type', 'text/plain');
-    
-    if(req.method === 'GET' && req.url === '/') {
-        res.statusCode = 200;
-        res.end('Hello World :)');
-    } else {
-        res.statusCode = 404;
-        res.end('Page not found.');
-    }
-}).listen(port);
+app.use(bodyParser.urlencoded({ extended: true }));
 
+app.get('/', (req, res) => {
+  res.sendFile('views/index.html', {root: __dirname});
+})
+
+app.use(router);
+
+app.listen(port);
