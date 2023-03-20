@@ -5,14 +5,14 @@
 Airport ticketing web application built using Express.js and MySQL, developed for Solvd NodeJS Internship Course. Allows users to buy flight tickets as well as get information about flights, routes and pricing.  
 
 ## Table of Contents
-[Roles and functionalities](https://github.com/belrobledo/airportProject#roles-and-functionalities)
+[Roles and functionalities](https://github.com/belrobledo/airportProject#roles-and-functionalities-)
 
-[Installing this Project](https://github.com/belrobledo/airportProject#installing-this-project)
+[Installing this Project](https://github.com/belrobledo/airportProject#installing-this-project-)
 
-[OAuth 2.0 Authorization Protocol](https://github.com/belrobledo/airportProject#oauth-2.0-authorization-protocol)  
-* [OAuth 2.0 Flow](https://github.com/belrobledo/airportProject#oauth-2.0-flow)
+[OAuth 2.0 Authorization Protocol](https://github.com/belrobledo/airportProject#oauth-20-authorization-protocol)  
+* [OAuth 2.0 Flow](https://github.com/belrobledo/airportProject#oauth-20-flow)
 
-[API Documentation](https://github.com/belrobledo/airportProject#api-documentation) 
+[API Documentation](https://github.com/belrobledo/airportProject#api-documentation-) 
 * [Users](https://github.com/belrobledo/airportProject#users)
 * [Airports](https://github.com/belrobledo/airportProject#airports)
 * [Employees](https://github.com/belrobledo/airportProject#employees)
@@ -27,7 +27,7 @@ Airport ticketing web application built using Express.js and MySQL, developed fo
 * [Flight](https://github.com/belrobledo/airportProject#flight)
 * [Airplane](https://github.com/belrobledo/airportProject#airplane)
 
-[Built With](https://github.com/belrobledo/airportProject#built-with)
+[Built With](https://github.com/belrobledo/airportProject#built-with-)
 
 [Author](https://github.com/belrobledo/airportProject#author)
 
