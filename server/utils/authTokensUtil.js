@@ -4,26 +4,26 @@ const { redisClient } = require('../databases/redis');
 const accessTokenExpiration = 900;
 const refreshTokenExpiration = 21600;
 
-//generates a new pair of tokens
+//Generates a new pair of tokens
 function generateTokens() {
     const accessToken = uuidv4();
     const refreshToken = uuidv4();
     return { accessToken, refreshToken };
 }
 
-//store tokens pair in redis db
-function storeTokens(tokens, user){
+//Store tokens pair in redis db
+function storeTokens(tokens, userId, userRole){
     try {
         redisClient.set(
             tokens.accessToken, 
-            JSON.stringify({tokenType: "access", userId: user.id, userRole: user.role}),
+            JSON.stringify({tokenType: "access", userId: userId, userRole: userRole}),
             'EX', accessTokenExpiration
         );
         redisClient.expire(tokens.accessToken, accessTokenExpiration);
 
         redisClient.set(
             tokens.refreshToken,
-            JSON.stringify({tokenType: "refresh", userId: user.id, userRole: user.role}),
+            JSON.stringify({tokenType: "refresh", userId: userId, userRole: userRole}),
             'EX', refreshTokenExpiration
         );
         redisClient.expire(tokens.refreshToken, refreshTokenExpiration);
@@ -35,10 +35,20 @@ function storeTokens(tokens, user){
 }
 
 //SetCookies with access and refresh tokens.
-function setCookies(res, tokens){
+function setTokenCookies(res, tokens){
     res.setHeader('Set-Cookie', [
         `accessToken=${tokens.accessToken}; HttpOnly; Max-Age=${accessTokenExpiration}; SameSite=lax;`,
         `refreshToken=${tokens.refreshToken}; HttpOnly; Max-Age=${refreshTokenExpiration}; SameSite=lax;`
+    ]);
+
+    return res;
+}
+
+//SetCookies with access and refresh tokens.
+function deleteTokenCookies(res){
+    res.setHeader('Set-Cookie', [
+        `accessToken=""; HttpOnly; Max-Age=0; SameSite=lax;`,
+        `refreshToken=""; HttpOnly; Max-Age=0; SameSite=lax;`
     ]);
 
     return res;
@@ -58,4 +68,27 @@ async function validateToken(token = "") {
     }
 }
 
-module.exports = { generateTokens, storeTokens, setCookies, validateToken };
+function refreshTokens(refreshToken, userId, userRole){
+    try{
+        deleteToken(refreshToken);
+        const tokens = generateTokens();
+        storeTokens(tokens, userId, userRole);
+
+        return tokens;
+    } catch (err) {
+        console.error(`Error refreshing tokens: ${err}`);
+        return null;
+    }
+}
+
+//Delete a token from redis storage
+function deleteToken(token){
+    try {
+        redisClient.del(token);
+    } catch (err) {
+        console.error(`Error deleting token in Redis: ${err}`);
+        throw err;
+    }
+}
+
+module.exports = { generateTokens, storeTokens, setTokenCookies, deleteTokenCookies, validateToken, refreshTokens, deleteToken };

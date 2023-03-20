@@ -1,5 +1,5 @@
-const { redisClient } = require('../databases/redis');
 const { parseCookies } = require('../utils/cookieParserUtil');
+const { setTokenCookies, validateToken, refreshTokens } = require('../utils/authTokensUtil');
 
 async function authenticate(req, res, next) {
     try {
@@ -19,8 +19,20 @@ async function authenticate(req, res, next) {
                 //refreshToken isn't valid - 401 unauthorized and redirect.
                 res.status(401).redirect('/');
             } else {
-                //refreshToken is valid - generateTokens
-                
+                //refreshToken is valid
+                const {userId, userRole} = refreshTokenData;
+                const newTokens = refreshTokens(refreshToken, userId, userRole);
+                if(newTokens){
+                    res = setTokenCookies(res, newTokens);
+
+                    console.log("userID: ", userId);
+                    console.log("userRole: ", userRole);
+
+                    next();
+                } else {
+                    //error generating new tokens
+                    res.status(401).redirect('/');
+                }
             }
         } else {
             const {userId, userRole} = accessTokenData;
@@ -32,33 +44,6 @@ async function authenticate(req, res, next) {
     } catch (err) {
         console.error(err);
         res.status(500).send("Internal Server Error");
-    }
-}
-
-function parseCookies(cookieHeader){
-    console.log("cookie header: ", cookieHeader);
-    const cookies = {};
-    if(cookieHeader){
-        cookieHeader.split(';').forEach(cookie => {
-            const parts = cookie.split('=');
-            cookies[parts[0].trim()] = decodeURIComponent(parts[1]);
-        });
-    }
-
-    return cookies;
-}
-
-//If token is valid, returns tokenData. Else, returns null
-async function validateToken(token = "") {
-    try {
-        const data = await redisClient.get(token);
-        if (data === null) {
-            return null;
-        }
-        return JSON.parse(data);
-    } catch (err) {
-        console.error(err);
-        throw err;
     }
 }
 

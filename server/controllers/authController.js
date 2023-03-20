@@ -1,9 +1,6 @@
 const userDAO = require('../dao/userDAO');
-const { v4: uuidv4 } = require('uuid');
-const { redisClient } = require('../databases/redis');
-
-const accessTokenExpiration = 900;
-const refreshTokenExpiration = 21600;
+const { generateTokens, storeTokens, setTokenCookies, deleteTokenCookies, deleteToken} = require('../utils/authTokensUtil');
+const { parseCookies } = require('../utils/cookieParserUtil');
 
 async function login(req, res) {
     const {email, password} = req.body;
@@ -19,13 +16,10 @@ async function login(req, res) {
             const tokens = generateTokens();
 
             //store tokens in Redis
-            storeTokens(tokens, user);
+            storeTokens(tokens, user.id, user.role);
 
             //set cookies with tokens in response header
-            res.setHeader('Set-Cookie', [
-                `accessToken=${tokens.accessToken}; HttpOnly; Max-Age=${accessTokenExpiration}; SameSite=lax;`,
-                `refreshToken=${tokens.refreshToken}; HttpOnly; Max-Age=${refreshTokenExpiration}; SameSite=lax;`
-            ]);
+            res = setTokenCookies(res, tokens);
 
             //As login was succesful, redirects to '/home'
             res.status(200).redirect('/home');
@@ -39,32 +33,19 @@ async function login(req, res) {
     }
 }
 
-function generateTokens() {
-    const accessToken = uuidv4();
-    const refreshToken = uuidv4();
-    return { accessToken, refreshToken };
-}
-
-function storeTokens(tokens, user){
+function logout(req, res){
     try {
-        redisClient.set(
-            tokens.accessToken, 
-            JSON.stringify({tokenType: "access", userId: user.id, userRole: user.role}),
-            'EX', accessTokenExpiration
-        );
-        redisClient.expire(tokens.accessToken, accessTokenExpiration);
+        const { accessToken, refreshToken } = parseCookies(req.headers.cookie);
 
-        redisClient.set(
-            tokens.refreshToken,
-            JSON.stringify({tokenType: "refresh", userId: user.id, userRole: user.role}),
-            'EX', refreshTokenExpiration
-        );
-        redisClient.expire(tokens.refreshToken, refreshTokenExpiration);
+        deleteToken(accessToken);
+        deleteToken(refreshToken);
+        res = deleteTokenCookies(res);
 
-    } catch (error) {
-        console.error(`Error storing tokens in Redis: ${error}`);
-        throw error;
+        res.status(200).redirect('/');
+    } catch (err) {
+        console.error(`Error logging out: ${err}`);
+        res.status(500).redirect('/');
     }
 }
 
-module.exports = { login };
+module.exports = { login, logout };

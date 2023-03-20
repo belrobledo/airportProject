@@ -6,13 +6,12 @@ const authenticate = require('../middlewares/authMiddleware');
 //unprotected routes
 router.post('/login', authController.login);
 
-//authenticate validation
-router.use(authenticate);
-
 //protected routes
-router.get('/home', (req, res) => {
+router.get('/home', authenticate, (req, res) => {
     const path = require('path');
     res.sendFile(path.resolve(__dirname + '/../views/home.html'));
 })
+
+router.get('/logout', authenticate, authController.logout);
 
 module.exports = router;
