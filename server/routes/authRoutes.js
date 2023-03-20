@@ -1,4 +1,5 @@
 const express = require('express');
+const config = require('../configs/config');
 const router = express.Router();
 const authController = require('../controllers/authController');
 const authenticate = require('../middlewares/authMiddleware');
@@ -8,8 +9,7 @@ router.post('/login', authController.login);
 
 //protected routes
 router.get('/home', authenticate, (req, res) => {
-    const path = require('path');
-    res.sendFile(path.resolve(__dirname + '/../views/home.html'));
+    res.sendFile(config.root + '/views/home.html');
 })
 
 router.get('/logout', authenticate, authController.logout);

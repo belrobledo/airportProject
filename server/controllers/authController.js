@@ -29,7 +29,7 @@ async function login(req, res) {
         }
     } catch(error) {
         console.error(error);
-        res.status(401).json(error);
+        res.status(401).redirect('/');
     }
 }
 

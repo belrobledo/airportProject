@@ -1,4 +1,5 @@
 const express = require('express');
+const config = require('./configs/config');
 const bodyParser = require('body-parser');
 const router = require('./routes/authRoutes');
 
@@ -8,7 +9,7 @@ const port = 3000;
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.get('/', (req, res) => {
-  res.sendFile('views/index.html', {root: __dirname});
+  res.sendFile(config.root + '/views/index.html');
 })
 
 app.use(router);
