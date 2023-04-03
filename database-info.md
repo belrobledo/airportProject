@@ -8,7 +8,7 @@ This documentation provides an overview of the database structure, including the
 
 ## Entity-Relantionship Diagram
 
-(Open the images in another window for better visualization)  
+(Open the images for better visualization)  
 
 ![ERD](https://i.imgur.com/0uiMDUR.png)
 ![ERD-tables](https://i.imgur.com/q9TDSD8.png)

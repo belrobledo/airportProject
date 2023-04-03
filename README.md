@@ -27,6 +27,8 @@ Airport ticketing web application built using Express.js and MySQL, developed fo
 * [Flight](https://github.com/belrobledo/airportProject#flight)
 * [Airplane](https://github.com/belrobledo/airportProject#airplane)
 
+[Database Documentation](https://github.com/belrobledo/airportProject#database-documentation)
+
 [Built With](https://github.com/belrobledo/airportProject#built-with-)
 
 [Author](https://github.com/belrobledo/airportProject#author)
@@ -233,6 +235,9 @@ Fields: id, model, capacity.
    "capacity": 853  
 }
 
+## Database Documentation
+
+To see all the details about the database documentation, please check [this markdown](https://github.com/belrobledo/airportProject/blob/master/database-info.md).
 
 ## Built With 💻
 
