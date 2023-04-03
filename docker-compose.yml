@@ -1,0 +1,63 @@
+version: "2.1"
+
+networks:
+  airport-net:
+    driver: bridge
+
+services:
+  server:
+    container_name: server-container
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    depends_on:
+      - redis
+      - db
+    environment:
+      - REDIS_HOST=redis-container
+      - REDIS_PORT=6379
+    networks:
+      - airport-net
+
+  redis:
+    container_name: redis-container
+    image: redis
+    expose:
+      - 6379
+    volumes:
+      - "redis_data:/data"
+    networks:
+      - airport-net
+  
+  db:
+    container_name: db-container
+    image: mysql
+    environment:
+      MYSQL_DATABASE: airproject
+      MYSQL_ROOT_PASSWORD: dbpass
+      MYSQL_INITDB_CHARSET: utf8mb4
+    volumes:
+      - db_data:/var/lib/mysql
+      - ./server/databases/schemas/airproject.sql:/docker-entrypoint-initdb.d/schema.sql
+    ports:
+      - "3307:3306"
+    networks:
+      - airport-net
+  
+  phpmyadmin:
+    container_name: phpmyadmin-container
+    image: phpmyadmin/phpmyadmin
+    environment:
+      PMA_HOST: db
+      PMA_USER: root
+      PMA_PASSWORD: dbpass
+    ports:
+      - "8080:80"
+    networks:
+      - airport-net
+
+volumes:
+  redis_data:
+  db_data:
