@@ -1,3 +1,14 @@
+const connection = require('../databases/connection');
+
+connection.query('SHOW DATABASES', (error, results) => {
+  if (error) {
+    console.error('Error executing query:', error);
+    return;
+  }
+  console.log('List of databases:', results);
+});
+
+
 const users = [{
     "id": "20d7c49c-0e3c-4784-8fee-dcd2973746e2",
     "role": "admin",

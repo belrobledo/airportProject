@@ -15,9 +15,8 @@ services:
     depends_on:
       - redis
       - db
-    environment:
-      - REDIS_HOST=redis-container
-      - REDIS_PORT=6379
+    env_file:
+      - .env
     networks:
       - airport-net
 
@@ -34,10 +33,12 @@ services:
   db:
     container_name: db-container
     image: mysql
+    env_file:
+      - .env
     environment:
-      MYSQL_DATABASE: airproject
-      MYSQL_ROOT_PASSWORD: dbpass
-      MYSQL_INITDB_CHARSET: utf8mb4
+      MYSQL_DATABASE: ${DB_NAME}
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+      MYSQL_INITDB_CHARSET: ${DB_INITDB_CHARSET}
     volumes:
       - db_data:/var/lib/mysql
       - ./server/databases/schemas/airproject.sql:/docker-entrypoint-initdb.d/schema.sql
@@ -49,10 +50,12 @@ services:
   phpmyadmin:
     container_name: phpmyadmin-container
     image: phpmyadmin/phpmyadmin
+    env_file:
+      - .env
     environment:
-      PMA_HOST: db
-      PMA_USER: root
-      PMA_PASSWORD: dbpass
+      PMA_HOST: ${PMA_HOST}
+      PMA_USER: ${PMA_USER}
+      PMA_PASSWORD: ${PMA_PASSWORD}
     ports:
       - "8080:80"
     networks:
