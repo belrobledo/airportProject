@@ -3,13 +3,13 @@ USE airproject;
 
 CREATE TABLE country (
 	idCountry tinyint unsigned primary key auto_increment,
-    name varchar(60) not null
+    name varchar(60) not null unique
 );
 
 CREATE TABLE city (
 	idCity int primary key auto_increment,
-    name varchar(100) not null,
-    postalCode varchar(15) not null,
+    name varchar(100) not null unique,
+    postalCode varchar(15) not null unique,
     idCountry tinyint unsigned not null,
     CONSTRAINT fk_idCountryC foreign key (idCountry) references country (idCountry)
 );
@@ -24,7 +24,7 @@ CREATE TABLE address (
 
 CREATE TABLE airport (
 	idAirport char(3) primary key,
-	name varchar(100) not null,
+	name varchar(100) not null unique,
     terminals varchar(50),
     idAddress int not null,
     CONSTRAINT fk_idAddressA foreign key (idAddress) references address (idAddress)
@@ -42,7 +42,7 @@ CREATE TABLE employee (
 CREATE TABLE user (
 	idUser char(36) primary key default (UUID()),
     isAdmin boolean not null default 0,
-    email varchar(256) not null,
+    email varchar(256) not null unique,
     password varchar(50) not null,
 	firstName varchar(100) not null,
     lastName varchar(100) not null,
@@ -54,7 +54,7 @@ CREATE TABLE user (
 
 CREATE TABLE airplane (
 	idAirplane tinyint unsigned primary key auto_increment,
-	model varchar(50) not null,
+	model varchar(50) not null unique,
     capacity smallint not null
 );
 
@@ -92,3 +92,22 @@ CREATE TABLE booking (
     CONSTRAINT fk_idUserB foreign key (idUser) references user (idUser),
     CONSTRAINT fk_idInvoiceB foreign key (idInvoice) references invoice (idInvoice)
 );
+
+/*--------------------------------------------------------------------------------------------------------------*/
+/*STORED PROCEDURES*/
+
+DELIMITER $$
+CREATE PROCEDURE spGetCountryByName(name varchar(60))
+BEGIN
+  SELECT *
+  FROM country as c
+  WHERE c.name = name;
+END 
+$$
+
+DELIMITER $$
+CREATE PROCEDURE spAddCountry(countryName varchar(60))
+BEGIN
+  INSERT INTO country (name) VALUES (name);
+END 
+$$
