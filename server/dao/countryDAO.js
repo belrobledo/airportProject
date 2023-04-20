@@ -1,44 +1,37 @@
 const connection = require('../databases/connection');
 const Country = require('../models/country');
 
+
 const tableName = "country";
 
 
-// function addCountry(country){
-//   connection.query('INSERT INTO ' + tableName + ' (name) VALUES (?);', country, (error, results) => {
-//     if (error) {
-//       console.error('Error executing query:', error);
-//         return;
-//       }
-//       console.log('Insert result', results);
-//     });
-// }
-
-function addCountry(country){
-  connection.query('CALL spAddCountry(?);', country, (error, results) => {
-    if (error) {
-      console.error('Error executing query:', error);
-        return;
+function addCountry(name) {
+  return new Promise((resolve, reject) => {
+    connection.query('CALL spAddCountry(?);', name, (error, results) => {
+      if (error) {
+        reject(error);
       }
-      console.log('Insert result', results);
-    });
+
+      resolve(results);
+      });
+  });
 }
 
-// function getCountryByName(name) {
-//   return new Promise((resolve, reject) => {
-//     connection.query('SELECT * FROM ' + tableName + ' WHERE name = ?;', name, (error, results) => {
-//       if (error) {
-//         reject(error);
-//       }
+function getCountryById(idCountry) {
+  return new Promise((resolve, reject) => {
+    connection.query('CALL spGetCountryById(?);', idCountry, (error, results) => {
+      if (error) {
+        reject(error);
+      }
 
-//       let country;
-//       if(results.length > 0){
-//         country = new Country(results[0].idCountry, results[0].name);
-//       }
-//       resolve(country);
-//     });
-//   });
-// }
+      let country;
+      if(results[0] && results[0].length){
+        country = new Country(results[0][0].idCountry, results[0][0].name);
+      }
+      resolve(country);
+    });
+  });
+}
 
 function getCountryByName(name) {
   return new Promise((resolve, reject) => {
@@ -48,10 +41,29 @@ function getCountryByName(name) {
       }
 
       let country;
-      if(results[0].length > 0){
-        country = new Country(results[0].idCountry, results[0].name);
+      if(results[0] && results[0].length){
+        country = new Country(results[0][0].idCountry, results[0][0].name);
       }
       resolve(country);
+    });
+  });
+}
+
+function getAllCountries() {
+  return new Promise((resolve, reject) => {
+    connection.query('CALL spGetAllCountries();', (error, results) => {
+      if (error) {
+        reject(error);
+      }
+
+      let countries = [];
+      if(results[0] && results[0].length){
+        results[0].forEach(result => {
+          let country = new Country(result.idCountry, result.name);
+          countries.push(country);
+        });
+      }
+      resolve(countries);
     });
   });
 }
@@ -92,4 +104,5 @@ function populateTable(){
   });
 }
 
-module.exports = { getCountryByName, addCountry };
+
+module.exports = { addCountry, getCountryById, getCountryByName, getAllCountries, populateTable };
