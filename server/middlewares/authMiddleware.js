@@ -1,5 +1,5 @@
 const { parseCookies } = require('../utils/cookieParserUtil');
-const { setTokenCookies, validateToken, refreshTokens } = require('../utils/authTokensUtil');
+const { setTokenCookies, validateToken, refreshTokens } = require('../utils/oauthTokensUtil');
 
 async function authenticate(req, res, next) {
     try {
@@ -11,23 +11,27 @@ async function authenticate(req, res, next) {
             const refreshTokenData = await validateToken(refreshToken);
 
             if(!refreshTokenData){
-                //refreshToken isn't valid - 401 unauthorized and redirect.
-                res.status(401).redirect('/');
+                //refreshToken isn't valid - 401 unauthorized
+                res.status(401).json({ error: "Unauthorized - Log in again" });
             } else {
                 //refreshToken is valid
-                const {userId, userRole} = refreshTokenData;
-                const newTokens = refreshTokens(refreshToken, userId, userRole);
+                const {idUser, isAdmin} = refreshTokenData;
+                const newTokens = refreshTokens(refreshToken, idUser, isAdmin);
 
                 if(newTokens){
                     res = setTokenCookies(res, newTokens);
+                    req.idUser = idUser;
+                    req.isAdmin = isAdmin;
                     next();
                 } else {
                     //error generating new tokens
-                    res.status(401).redirect('/');
+                    res.status(401).json({ error: "Unauthorized - Log in again" });
                 }
             }
         } else {
-            const {userId, userRole} = accessTokenData;
+            const {idUser, isAdmin} = accessTokenData;
+            req.idUser = idUser;
+            req.isAdmin = isAdmin;
             next();
         }
     } catch (err) {

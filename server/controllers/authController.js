@@ -1,35 +1,38 @@
-const userDAO = require('../dao/userDAO');
-const { generateTokens, storeTokens, setTokenCookies, deleteTokenCookies, deleteToken} = require('../utils/authTokensUtil');
+const argon2 = require('argon2');
+const { userLogin } = require('../dao/userDAO');
+const { generateTokens, storeTokens, setTokenCookies, deleteTokenCookies, deleteToken} = require('../utils/oauthTokensUtil');
 const { parseCookies } = require('../utils/cookieParserUtil');
 
 async function login(req, res) {
     const {email, password} = req.body;
 
     if (!email || !password) {
-        return res.status(422).json('Unprocessable Entity - need to provide email and password.');
+        return res.status(422).json({ error: 'Unprocessable Entity - need to provide email and password.' });
     }
 
     try {
-        const user = await userDAO.getUserByEmail(email);
-        if(password === user.password){
+        const user = await userLogin(email);
+        const isVerified = await argon2.verify(user.passwordHash, password);
+
+        if(isVerified){
             //generate tokens
             const tokens = generateTokens();
 
             //store tokens in Redis
-            storeTokens(tokens, user.id, user.role);
+            storeTokens(tokens, user.idUser, user.isAdmin);
 
             //set cookies with tokens in response header
             res = setTokenCookies(res, tokens);
 
-            //As login was succesful, redirects to '/home'
-            res.status(200).redirect('/home');
+            //login succesful
+            res.status(200).json({ message: "Ok - logged in" });
         } else {
-            //if credentials didn't match, redirects to '/'
-            res.status(401).redirect('/');
+            //if credentials didn't match
+            res.status(401).json({ error: "Unauthorized - credentials didn't match." });
         }
     } catch(error) {
-        console.error(error);
-        res.status(401).redirect('/');
+        console.error(`Error logging IN: ${err}`);
+        res.status(500).json({ error: "Internal server error" });
     }
 }
 
@@ -41,10 +44,10 @@ function logout(req, res){
         deleteToken(refreshToken);
         res = deleteTokenCookies(res);
 
-        res.status(200).redirect('/');
+        res.status(200).json({ message: "Ok - logged out" });
     } catch (err) {
-        console.error(`Error logging out: ${err}`);
-        res.status(500).redirect('/');
+        console.error(`Error logging OUT: ${err}`);
+        res.status(500).json({ error: "Internal server error" });
     }
 }
 

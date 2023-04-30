@@ -1,6 +1,6 @@
 class Employee {
 
-    constructor(idEmployee = "", firstName, lastName, position, idAirport){
+    constructor(idEmployee = null, firstName, lastName, position, idAirport){
         this.idEmployee = idEmployee;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -9,3 +9,5 @@ class Employee {
     }
 
 }
+
+module.exports = Employee;

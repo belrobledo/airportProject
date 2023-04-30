@@ -1,20 +1,19 @@
 require('dotenv').config();
 const express = require('express');
-const bodyParser = require('body-parser');
-const authRouter = require('./routes/authRoutes');
-const countryRouter = require('./routes/countryRoutes');
-
+const routes = require('./routes');
 const app = express();
 const port = 3000;
 
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(bodyParser.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 
 app.get('/', (req, res) => {
-  res.sendFile(process.env.ROOT_PATH + '/views/index.html');
-})
+  res.status(200).json({ message: 'API is up and running' });
+});
 
-app.use(authRouter);
-app.use(countryRouter);
+app.use(routes);
+
+//require only once after creating the db container
+//require('./databases/populateTables');
 
 app.listen(port);

@@ -1,6 +1,6 @@
 class Invoice {
 
-    constructor(idInvoice = "", issuedDate, total, paymentMethod){
+    constructor(idInvoice = null, issuedDate, total, paymentMethod){
         this.idInvoice = idInvoice;
         this.issuedDate = issuedDate;
         this.total = total;
@@ -8,3 +8,5 @@ class Invoice {
     }
 
 }
+
+module.exports = Invoice;

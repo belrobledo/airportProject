@@ -7,11 +7,8 @@ const authenticate = require('../middlewares/authMiddleware');
 //unprotected routes
 authRouter.post('/login', authController.login);
 
-//protected routes
-authRouter.get('/home', authenticate, (req, res) => {
-    res.sendFile(process.env.ROOT_PATH + '/views/home.html');
-})
-
+//protected logged user routes
 authRouter.get('/logout', authenticate, authController.logout);
+
 
 module.exports = authRouter;
