@@ -1,7 +1,7 @@
 const express = require('express');
 const authRouter = express.Router();
 const authController = require('../controllers/authController');
-const authenticate = require('../middlewares/authMiddleware');
+const { authenticate } = require('../middlewares/authMiddleware');
 
 
 //unprotected routes

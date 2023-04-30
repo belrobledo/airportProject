@@ -48,7 +48,7 @@ function getAirportByCity(city) {
 
 function getAllAirports() {
   return new Promise((resolve, reject) => {
-    connection.query('CALL getAllAirports();', (error, results) => {
+    connection.query('CALL spGetAllAirports();', (error, results) => {
       if (error) {
         reject(error);
       }

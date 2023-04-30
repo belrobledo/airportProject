@@ -1,21 +1,21 @@
 const express = require('express');
 const airplaneRouter = express.Router();
 const airplaneController = require('../controllers/airplaneController');
-const authenticate = require('../middlewares/authMiddleware');
+const { authenticate, authorizeAdmin } = require('../middlewares/authMiddleware');
 
 
 //protected admin routes
-airplaneRouter.post('/airplanes', authenticate, airplaneController.addAirplane);
+airplaneRouter.post('/airplanes', authenticate, authorizeAdmin, airplaneController.addAirplane);
 
-airplaneRouter.get('/airplanes/id/:idairplane', authenticate, airplaneController.getAirplaneById);
+airplaneRouter.get('/airplanes/id/:idairplane', authenticate, authorizeAdmin, airplaneController.getAirplaneById);
 
-airplaneRouter.get('/airplanes/model/:airplanemodel', authenticate, airplaneController.getAirplaneByModel);
+airplaneRouter.get('/airplanes/model/:airplanemodel', authenticate, authorizeAdmin, airplaneController.getAirplaneByModel);
 
-airplaneRouter.get('/airplanes', authenticate, airplaneController.getAllAirplanes);
+airplaneRouter.get('/airplanes', authenticate, authorizeAdmin, airplaneController.getAllAirplanes);
 
-airplaneRouter.put('/airplanes', authenticate, airplaneController.updateAirplane);
+airplaneRouter.put('/airplanes', authenticate, authorizeAdmin, airplaneController.updateAirplane);
 
-airplaneRouter.delete('/airplanes/:idairplane', authenticate, airplaneController.deleteAirplane);
+airplaneRouter.delete('/airplanes/:idairplane', authenticate, authorizeAdmin, airplaneController.deleteAirplane);
 
 
 module.exports = airplaneRouter;

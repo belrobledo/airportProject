@@ -1,15 +1,15 @@
 const express = require('express');
 const bookingRouter = express.Router();
 const bookingController = require('../controllers/bookingController');
-const authenticate = require('../middlewares/authMiddleware');
+const { authenticate, authorizeBoth } = require('../middlewares/authMiddleware');
 
 
 //protected admin & user routes
-bookingRouter.post('/bookings', authenticate, bookingController.addBooking);
+bookingRouter.post('/bookings', authenticate, authorizeBoth, bookingController.addBooking);
 
-bookingRouter.get('/bookings/id/:idbooking', authenticate, bookingController.getBookingById); //get idUser from db
+bookingRouter.get('/bookings/id/:idbooking', authenticate, authorizeBoth, bookingController.getBookingById);
 
-bookingRouter.get('/bookings/user/:iduser', authenticate, bookingController.getAllBookingsByUser); //get idUser from db
+bookingRouter.get('/bookings/user/:iduser', authenticate, authorizeBoth, bookingController.getAllBookingsByUser);
 
 
 module.exports = bookingRouter;

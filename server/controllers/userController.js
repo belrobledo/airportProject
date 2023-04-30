@@ -20,19 +20,7 @@ async function addUser(req, res){
 }
 
 function getUserById(req, res){
-    if(req.isAdmin || req.idUser === req.params.iduser){
-        userDAO.getUserById(req.params.iduser).then( user => {
-            (user) ? res.status(200).json(user) : res.status(404).json({ error: "User not found" });
-        }).catch( err => {
-            res.status(500).json({ error: "Internal server error" });
-        })
-    } else {
-        res.status(403).json({ message: 'You are not authorized to access this resource.' });
-    }
-}
-
-function getUserByEmail(req, res){
-    userDAO.getUserByEmail(req.params.email).then( user => {
+    userDAO.getUserById(req.params.iduser).then( user => {
         (user) ? res.status(200).json(user) : res.status(404).json({ error: "User not found" });
     }).catch( err => {
         res.status(500).json({ error: "Internal server error" });
@@ -99,4 +87,4 @@ function deleteUser(req, res){
 }
 
 
-module.exports = { addUser, getUserById, getUserByEmail, getUserByBooking, getAllUsers, updateUser, updateUserPassword, deleteUser };
+module.exports = { addUser, getUserById, getUserByBooking, getAllUsers, updateUser, updateUserPassword, deleteUser };

@@ -1,10 +1,10 @@
 const express = require('express');
 const flightRouter = express.Router();
 const flightController = require('../controllers/flightController');
-const authenticate = require('../middlewares/authMiddleware');
+const { authenticate, authorizeAdmin } = require('../middlewares/authMiddleware');
 
 
-//protected admin & all users routes
+//protected all users routes
 flightRouter.get('/flights/id/:idflight', authenticate, flightController.getFlightById);
 
 flightRouter.get('/flights', authenticate, flightController.getAllFlights);
@@ -16,11 +16,11 @@ flightRouter.get('/flights/destination', authenticate, flightController.getAllFl
 flightRouter.get('/flights/origindestination', authenticate, flightController.getAllFlightsByOriginAndDestination);
 
 //protected admin routes
-flightRouter.post('/flights', authenticate, flightController.addFlight);
+flightRouter.post('/flights', authenticate, authorizeAdmin, flightController.addFlight);
 
-flightRouter.put('/flights', authenticate, flightController.updateFlight);
+flightRouter.put('/flights', authenticate, authorizeAdmin, flightController.updateFlight);
 
-flightRouter.delete('/flights/:idflight', authenticate, flightController.deleteFlight);
+flightRouter.delete('/flights/:idflight', authenticate, authorizeAdmin, flightController.deleteFlight);
 
 
 module.exports = flightRouter;

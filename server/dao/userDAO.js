@@ -33,22 +33,6 @@ function getUserById(idUser) {
   });
 }
 
-function getUserByEmail(idUser) {
-  return new Promise((resolve, reject) => {
-    connection.query('CALL spGetUserByEmail(?);', idUser, (error, results) => {
-      if (error) {
-        reject(error);
-      }
-
-      let user;
-      if(results[0] && results[0].length){
-        user = new User(results[0][0].idUser, results[0][0].isAdmin, results[0][0].email, results[0][0].firstName, results[0][0].lastName);
-      }
-      resolve(user);
-    });
-  });
-}
-
 function getUserByBooking(idBooking) {
   return new Promise((resolve, reject) => {
     connection.query('CALL spGetUserByBooking(?);', idBooking, (error, results) => {
@@ -152,6 +136,54 @@ function userLogin(email) {
   });
 }
 
+function getIdUserbyInvoice(idInvoice) {
+  return new Promise((resolve, reject) => {
+    connection.query('CALL spGetIdUserByInvoice(?);', idInvoice, (error, results) => {
+      if (error) {
+        reject(error);
+      }
+
+      let idUser = null;
+      if(results[0] && results[0].length){
+        idUser = results[0][0].idUser;
+      }
+      resolve(idUser);
+    });
+  });
+}
+
+function getIdUserbyBooking(idBooking) {
+  return new Promise((resolve, reject) => {
+    connection.query('CALL spGetIdUserByBooking(?);', idBooking, (error, results) => {
+      if (error) {
+        reject(error);
+      }
+
+      let idUser = null;
+      if(results[0] && results[0].length){
+        idUser = results[0][0].idUser;
+      }
+      resolve(idUser);
+    });
+  });
+}
+
+function getIdUserByTicket(idTicket) {
+  return new Promise((resolve, reject) => {
+    connection.query('CALL spGetIdUserByTicket(?);', idTicket, (error, results) => {
+      if (error) {
+        reject(error);
+      }
+
+      let idUser = null;
+      if(results[0] && results[0].length){
+        idUser = results[0][0].idUser;
+      }
+      resolve(idUser);
+    });
+  });
+}
+
 //only execute once when creating db
 async function loadUsers() {
   const users = [{
@@ -211,7 +243,6 @@ async function loadUsers() {
 module.exports = { 
   addUser, 
   getUserById, 
-  getUserByEmail, 
   getUserByBooking, 
   getAllUsers, 
   updateUser, 
@@ -219,4 +250,7 @@ module.exports = {
   updateUserPassword, 
   deleteUser, 
   userLogin, 
+  getIdUserbyInvoice, 
+  getIdUserbyBooking, 
+  getIdUserByTicket, 
   loadUsers };

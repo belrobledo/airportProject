@@ -133,7 +133,7 @@ BEGIN
   SELECT ci.name, postalCode, co.name as country
   FROM city as ci
   INNER JOIN country as co
-  ON ci.idCountry = co.idCountry
+  ON ci.idCountry = co.idCountry;
 END 
 $$
 /*--------------------------------------------------------------------------------------------------------------*/
@@ -316,14 +316,6 @@ BEGIN
 END 
 $$
 
-CREATE PROCEDURE spGetUserByEmail(email varchar(256))
-BEGIN
-  SELECT u.idUser, u.isAdmin, u.email, u.firstName, u.lastName
-  FROM user as u
-  WHERE u.email = email;
-END 
-$$
-
 CREATE PROCEDURE spGetUserByBooking(idBooking int)
 BEGIN
   SELECT u.idUser, u.isAdmin, u.email, u.firstName, u.lastName
@@ -378,6 +370,34 @@ BEGIN
   FROM user as u
   WHERE u.email = email;
 END
+$$
+
+CREATE PROCEDURE spGetIdUserByInvoice(idInvoice int)
+BEGIN
+  SELECT idUser
+  FROM booking as b
+  INNER JOIN invoice as i
+  ON b.idInvoice = i.idInvoice
+  WHERE i.idInvoice = idInvoice;
+END 
+$$
+
+CREATE PROCEDURE spGetIdUserByBooking(idBooking int)
+BEGIN
+  SELECT idUser
+  FROM booking as b
+  WHERE b.idBooking = idBooking;
+END 
+$$
+
+CREATE PROCEDURE spGetIdUserByTicket(idTicket int)
+BEGIN
+  SELECT idUser
+  FROM booking as b
+  INNER JOIN ticket as t
+  ON b.idBooking = t.idBooking
+  WHERE t.idTicket = idTicket;
+END 
 $$
 /*--------------------------------------------------------------------------------------------------------------*/
 
