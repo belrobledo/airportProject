@@ -145,7 +145,7 @@ function loadFlights(){
   }, {
     "idAirportOrigin": "BUE",
     "idAirportDestination": "MAD",
-    "departureTime": "2023-10-20 06:30:00",
+    "departureTime": "2023-11-20 06:30:00",
     "distance": 10039,
     "duration": 753,
     "price": 790,
@@ -154,7 +154,7 @@ function loadFlights(){
   }, {
     "idAirportOrigin": "MAD",
     "idAirportDestination": "MSQ",
-    "departureTime": "2023-10-20 23:00:00",
+    "departureTime": "2023-11-20 23:00:00",
     "distance": 3403,
     "duration": 323,
     "price": 510,

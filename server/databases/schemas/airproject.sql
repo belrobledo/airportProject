@@ -474,8 +474,9 @@ BEGIN
   FROM flight as f
   INNER JOIN airplane as a
   ON f.idAirplane = a.idAirplane
-  WHERE f.idAirportOrigin = idAirportOrigin AND DATE(f.departureTime) = departure
-  ORDER BY price;
+  WHERE (f.idAirportOrigin = idAirportOrigin) 
+	AND (DATE(f.departureTime) BETWEEN DATE_SUB(DATE(departure), INTERVAL 1 DAY) AND DATE_ADD(DATE(departure), INTERVAL 1 DAY))
+  ORDER BY departureTime, price;
 END 
 $$
 
@@ -485,8 +486,9 @@ BEGIN
   FROM flight as f
   INNER JOIN airplane as a
   ON f.idAirplane = a.idAirplane
-  WHERE f.idAirportDestination = idAirportDestination AND DATE(f.departureTime) = departure
-  ORDER BY price;
+  WHERE (f.idAirportDestination = idAirportDestination) 
+	AND (DATE(f.departureTime) BETWEEN DATE_SUB(DATE(departure), INTERVAL 1 DAY) AND DATE_ADD(DATE(departure), INTERVAL 1 DAY))
+  ORDER BY departureTime, price;
 END 
 $$
 
@@ -496,8 +498,9 @@ BEGIN
   FROM flight as f
   INNER JOIN airplane as a
   ON f.idAirplane = a.idAirplane
-  WHERE (f.idAirportOrigin = idAirportOrigin AND f.idAirportDestination = idAirportDestination) AND DATE(f.departureTime) = departure
-  ORDER BY price;
+  WHERE (f.idAirportOrigin = idAirportOrigin AND f.idAirportDestination = idAirportDestination)
+	AND (DATE(f.departureTime) BETWEEN DATE_SUB(DATE(departure), INTERVAL 1 DAY) AND DATE_ADD(DATE(departure), INTERVAL 1 DAY))
+  ORDER BY departureTime, price;
 END 
 $$
 

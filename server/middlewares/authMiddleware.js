@@ -36,7 +36,6 @@ async function authenticate(req, res, next) {
             next();
         }
     } catch (err) {
-        console.error(err);
         res.status(500).send("Internal Server Error");
     }
 }
@@ -52,9 +51,6 @@ function authorizeAdmin(req, res, next){
 async function authorizeUser(req, res, next){
     try{
         let idUser = req.params.iduser || req.body.idUser;
-
-        console.log("req.idUser: ", req.idUser)
-        console.log("idUser1: ", idUser);
 
         if(!idUser){
             const { idbooking, idinvoice, idticket } = req.params;
@@ -79,8 +75,6 @@ async function authorizeUser(req, res, next){
                 }
             }
         }
-
-        console.log("idUser2: ", idUser);
     
         if(req.idUser === idUser){
             next();
@@ -88,7 +82,6 @@ async function authorizeUser(req, res, next){
             res.status(403).json({ message: "Forbidden - This resource can only be accessed by its owner." });
         }
     } catch (err) {
-        console.log(err);
         res.status(500).json({ error: "Internal server error" });
     }
 }
