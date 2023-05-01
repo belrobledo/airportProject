@@ -14,6 +14,14 @@ function addFlight(req, res){
     })
 }
 
+function getAvailableSeats(req, res){
+    flightDAO.getAvailableSeats(req.params.idflight).then( availableSeats => {
+        (availableSeats) ? res.status(200).json( {availableSeats: availableSeats} ) : res.status(404).json({ error: "Flight not found" });
+    }).catch( err => {
+        res.status(500).json({ error: "Internal server error" });
+    })
+}
+
 function getFlightById(req, res){
     flightDAO.getFlightById(req.params.idflight).then( flight => {
         (flight) ? res.status(200).json(flight) : res.status(404).json({ error: "Flight not found" });
@@ -50,12 +58,23 @@ function getAllFlightsByDestination(req, res){
     })
 }
 
-function getAllFlightsByOriginAndDestination(req, res){
+function getAllDirectFlights(req, res){
     const {origin, destination, departure} = req.query;
 
-    flightDAO.getAllFlightsByOriginAndDestination(origin, destination, departure).then( flights => {
+    flightDAO.getAllDirectFlights(origin, destination, departure).then( flights => {
+        (flights && flights.length) ? res.status(200).json(flights) : res.status(404).json({ error: "No direct flights found - Check possible connecting flights in '/flights/connection'" });
+    }).catch( err => {
+        res.status(500).json({ error: "Internal server error" });
+    })
+}
+
+function getAllConnectingFlights(req, res){
+    const {origin, destination, departure} = req.query;
+
+    flightDAO.getAllConnectingFlights(origin, destination, departure).then( flights => {
         (flights && flights.length) ? res.status(200).json(flights) : res.status(404).json({ error: "No flights found" });
     }).catch( err => {
+        console.log(err);
         res.status(500).json({ error: "Internal server error" });
     })
 }
@@ -85,11 +104,13 @@ function deleteFlight(req, res){
 
 module.exports = { 
     addFlight, 
+    getAvailableSeats, 
     getFlightById, 
     getAllFlights, 
     getAllFlightsByOrigin, 
     getAllFlightsByDestination, 
-    getAllFlightsByOriginAndDestination, 
+    getAllDirectFlights, 
+    getAllConnectingFlights, 
     updateFlight, 
     deleteFlight 
 };

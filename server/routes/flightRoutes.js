@@ -5,6 +5,8 @@ const { authenticate, authorizeAdmin } = require('../middlewares/authMiddleware'
 
 
 //protected all users routes
+flightRouter.get('/flights/availability/:idflight', authenticate, flightController.getAvailableSeats);
+
 flightRouter.get('/flights/id/:idflight', authenticate, flightController.getFlightById);
 
 flightRouter.get('/flights', authenticate, flightController.getAllFlights);
@@ -13,7 +15,9 @@ flightRouter.get('/flights/origin', authenticate, flightController.getAllFlights
 
 flightRouter.get('/flights/destination', authenticate, flightController.getAllFlightsByDestination);
 
-flightRouter.get('/flights/origindestination', authenticate, flightController.getAllFlightsByOriginAndDestination);
+flightRouter.get('/flights/direct', authenticate, flightController.getAllDirectFlights);
+
+flightRouter.get('/flights/connection', authenticate, flightController.getAllConnectingFlights);
 
 //protected admin routes
 flightRouter.post('/flights', authenticate, authorizeAdmin, flightController.addFlight);

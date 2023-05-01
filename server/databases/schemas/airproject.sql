@@ -458,9 +458,15 @@ BEGIN
 END 
 $$
 
-CREATE PROCEDURE spGetFlightById(idFlight int)
+CREATE PROCEDURE spGetAvailableSeats(idFlight int)
 BEGIN
-  SELECT idFlight, idAirportOrigin, idAirportDestination, departureTime, distance, duration, price, airline, a.model, a.capacity
+  DECLARE numTickets int default 0;
+
+  SELECT COUNT(*) INTO numTickets
+  FROM ticket as t
+  WHERE t.idFlight = idFlight;
+
+  SELECT a.capacity - numTickets AS availableSeats
   FROM flight as f
   INNER JOIN airplane as a
   ON f.idAirplane = a.idAirplane
@@ -468,45 +474,74 @@ BEGIN
 END 
 $$
 
-CREATE PROCEDURE spGetAllFlightsByOrigin(idAirportOrigin char(3), departure dateTime)
+CREATE PROCEDURE spGetFlightById(idFlight int)
 BEGIN
-  SELECT idFlight, idAirportOrigin, idAirportDestination, departureTime, distance, duration, price, airline, a.model, a.capacity
+  SELECT f.idFlight, f.idAirportOrigin, f.idAirportDestination, f.departureTime, f.distance, f.duration, f.price, f.airline, a.model, a.capacity
   FROM flight as f
   INNER JOIN airplane as a
   ON f.idAirplane = a.idAirplane
-  WHERE (f.idAirportOrigin = idAirportOrigin) 
+  WHERE f.idFlight = idFlight;
+END 
+$$
+
+CREATE PROCEDURE spGetAllFlightsByOrigin(origin char(3), departure dateTime)
+BEGIN
+  SELECT f.idFlight, f.idAirportOrigin, f.idAirportDestination, f.departureTime, f.distance, f.duration, f.price, f.airline, a.model, a.capacity
+  FROM flight as f
+  INNER JOIN airplane as a
+  ON f.idAirplane = a.idAirplane
+  WHERE (f.idAirportOrigin = origin) 
 	AND (DATE(f.departureTime) BETWEEN DATE_SUB(DATE(departure), INTERVAL 1 DAY) AND DATE_ADD(DATE(departure), INTERVAL 1 DAY))
   ORDER BY departureTime, price;
 END 
 $$
 
-CREATE PROCEDURE spGetAllFlightsByDestination(idAirportDestination char(3), departure dateTime)
+CREATE PROCEDURE spGetAllFlightsByDestination(destination char(3), departure dateTime)
 BEGIN
-  SELECT idFlight, idAirportOrigin, idAirportDestination, departureTime, distance, duration, price, airline, a.model, a.capacity
+  SELECT f.idFlight, f.idAirportOrigin, f.idAirportDestination, f.departureTime, f.distance, f.duration, f.price, f.airline, a.model, a.capacity
   FROM flight as f
   INNER JOIN airplane as a
   ON f.idAirplane = a.idAirplane
-  WHERE (f.idAirportDestination = idAirportDestination) 
+  WHERE (f.idAirportDestination = destination) 
 	AND (DATE(f.departureTime) BETWEEN DATE_SUB(DATE(departure), INTERVAL 1 DAY) AND DATE_ADD(DATE(departure), INTERVAL 1 DAY))
   ORDER BY departureTime, price;
 END 
 $$
 
-CREATE PROCEDURE spGetAllFlightsByOriginAndDestination(idAirportOrigin char(3), idAirportDestination char(3), departure dateTime)
+CREATE PROCEDURE spGetAllDirectFlights(origin char(3), destination char(3), departure dateTime)
 BEGIN
-  SELECT idFlight, idAirportOrigin, idAirportDestination, departureTime, distance, duration, price, airline, a.model, a.capacity
+  SELECT f.idFlight, f.idAirportOrigin, f.idAirportDestination, f.departureTime, f.distance, f.duration, f.price, f.airline, a.model, a.capacity
   FROM flight as f
   INNER JOIN airplane as a
   ON f.idAirplane = a.idAirplane
-  WHERE (f.idAirportOrigin = idAirportOrigin AND f.idAirportDestination = idAirportDestination)
+  WHERE (f.idAirportOrigin = origin AND f.idAirportDestination = destination)
 	AND (DATE(f.departureTime) BETWEEN DATE_SUB(DATE(departure), INTERVAL 1 DAY) AND DATE_ADD(DATE(departure), INTERVAL 1 DAY))
   ORDER BY departureTime, price;
+END 
+$$
+
+CREATE PROCEDURE spGetAllConnectingFlights(origin char(3), destination char(3), departure dateTime)
+BEGIN
+  SELECT f1.idFlight as idFlight1, f1.idAirportOrigin as idAirportOrigin1, f1.idAirportDestination as idAirportDestination1, f1.departureTime as departureTime1,
+			f1.distance as distance1, f1.duration as duration1, f1.price as price1, f1.airline as airline1, a1.model as model1, a1.capacity as capacity1, 
+		f2.idFlight as idFlight2, f2.idAirportOrigin as idAirportOrigin2, f2.idAirportDestination as idAirportDestination2, f2.departureTime as departureTime2, 
+			f2.distance as distance2, f2.duration as duration2, f2.price as price2, f2.airline as airline2, a2.model as model2, a2.capacity as capacity2
+  FROM flight as f1
+  INNER JOIN airplane as a1
+  ON f1.idAirplane = a1.idAirplane
+  JOIN flight as f2
+  INNER JOIN airplane as a2
+  ON f2.idAirplane = a2.idAirplane 
+  ON f1.idAirportDestination = f2.idAirportOrigin
+  WHERE f1.idAirportOrigin = origin AND f2.idAirportDestination = destination
+	AND (DATE(f1.departureTime) BETWEEN DATE_SUB(DATE(departure), INTERVAL 1 DAY) AND DATE_ADD(DATE(departure), INTERVAL 1 DAY))
+  ORDER BY f1.departureTime;
 END 
 $$
 
 CREATE PROCEDURE spGetAllFlights()
 BEGIN
-  SELECT idFlight, idAirportOrigin, idAirportDestination, departureTime, distance, duration, price, airline, a.model, a.capacity
+  SELECT f.idFlight, f.idAirportOrigin, f.idAirportDestination, f.departureTime, f.distance, f.duration, f.price, f.airline, a.model, a.capacity
   FROM flight as f
   INNER JOIN airplane as a
   ON f.idAirplane = a.idAirplane
@@ -534,9 +569,10 @@ $$
 
 
 /* INVOICE */
-CREATE PROCEDURE spAddInvoice(total float, paymentMethod varchar(50))
+CREATE PROCEDURE spAddInvoice(IN total float, IN paymentMethod varchar(50), OUT idInvoice int)
 BEGIN
   INSERT INTO invoice (total, paymentMethod) VALUES (total, paymentMethod);
+  SET idInvoice = LAST_INSERT_ID();
 END 
 $$
 
@@ -660,4 +696,93 @@ END
 $$
 
 \d ;
+/*--------------------------------------------------------------------------------------------------------------*/
+
+
+/* DATA INSERTS */
+
+INSERT INTO `country` (`idCountry`, `name`) VALUES
+(1, 'Argentina'),
+(2, 'Australia'),
+(3, 'Belarus'),
+(4, 'Brazil'),
+(5, 'Canada'),
+(6, 'China'),
+(7, 'Colombia'),
+(8, 'England'),
+(9, 'France'),
+(10, 'Germany'),
+(11, 'Italy'),
+(12, 'Japan'),
+(13, 'Korea'),
+(14, 'Mexico'),
+(15, 'Poland'),
+(16, 'Portugal'),
+(21, 'Russia'),
+(17, 'Saudi Arabia'),
+(18, 'Spain'),
+(19, 'Ukraine'),
+(20, 'United States');
+
+INSERT INTO `city` (`idCity`, `name`, `postalCode`, `idCountry`) VALUES
+(1, 'Buenos Aires', '1802', 1),
+(2, 'London', 'N17 9EZ', 8),
+(3, 'Tokyo', '100-0005', 12),
+(4, 'Madrid', '28292', 18),
+(5, 'Berlin', '10117', 10),
+(6, 'Los Angeles', '90002', 20),
+(7, 'Minsk', '220004', 3),
+(8, 'Mar Del Plata', '7600', 1);
+
+INSERT INTO `address` (`idAddress`, `addressLine1`, `addressLine2`, `idCity`) VALUES
+(1, 'Autopista Teniente General Ricchieri', 'KM. 33,5', 1),
+(2, 'Nelson Road, Hounslow Middlesex, TW6 2GW', 'The Compass Centre', 2),
+(3, '1 World Way', '', 6),
+(4, '1-1 Furugome, Narita', 'Chiba 282-0004', 3),
+(5, 'Melli-Beese-Ring 1', '12529 Schönefeld', 5),
+(6, 'Av. de la Hispanidad', 's/n, 28042', 4),
+(7, 'M2 Minsk 220054', '', 7),
+(8, 'Autovia 2', 'Km 398.5', 8);
+
+INSERT INTO `airport` (`idAirport`, `name`, `idAddress`) VALUES
+('BER', 'Berlin Brandenburg Airport', 5),
+('BUE', 'Aeropuerto Internacional Ezeiza', 1),
+('LAX', 'Los Angeles International Airport', 3),
+('LHR', 'London-Heathrow Airport', 2),
+('MAD', 'Aeropuerto Adolfo Suárez Madrid-Barajas', 6),
+('MDQ', 'Aeropuerto Internacional Astor Piazzolla', 8),
+('MSQ', 'Minsk National Airport', 7),
+('NRT', 'Narita International Airport', 4);
+
+INSERT INTO `employee` (`idEmployee`, `firstName`, `lastName`, `position`, `idAirport`) VALUES
+('ef9e0a59-e7a7-11ed-8236-0242ac180004', 'Christian', 'Zarate', 'Air Traffic Controller', 'LHR'),
+('ef9e8c75-e7a7-11ed-8236-0242ac180004', 'Ricardo', 'Bardotelli', 'Avionics Technician', 'BUE'),
+('ef9efc4e-e7a7-11ed-8236-0242ac180004', 'Hernan', 'Mekuncio', 'Flight Attendant', 'LHR'),
+('ef9f6c9b-e7a7-11ed-8236-0242ac180004', 'Lukas', 'Trevi', 'Reservation Agent', 'LAX'),
+('ef9ff205-e7a7-11ed-8236-0242ac180004', 'Luc', 'Kennedy', 'Reservation Agent', 'NRT');
+
+INSERT INTO `airplane` (`idAirplane`, `model`, `capacity`) VALUES
+(1, 'Airbus A310', 200),
+(2, 'Airbus A340', 375),
+(3, 'Airbus A330', 335),
+(4, 'Airbus A380', 550);
+
+INSERT INTO `flight` (`idFlight`, `idAirportOrigin`, `idAirportDestination`, `departureTime`, `distance`, `duration`, `price`, `airline`, `idAirplane`) VALUES
+(1, 'BUE', 'NRT', '2023-12-26 19:30:00', 18362, 1830, 1190, 'Aerolineas Argentinas', 2),
+(2, 'BUE', 'MAD', '2023-11-20 06:30:00', 10039, 753, 790, 'Iberia', 1),
+(3, 'MAD', 'MSQ', '2023-11-20 23:00:00', 3403, 323, 510, 'Iberia', 3),
+(4, 'NRT', 'BUE', '2023-12-29 09:10:00', 18362, 1830, 1310, 'Japan Airlines', 4),
+(5, 'LHR', 'LAX', '2023-09-03 11:45:00', 8756, 628, 398, 'British Airways', 2),
+(6, 'LHR', 'BER', '2023-09-03 21:20:00', 932, 100, 137, 'Lufthansa', 3),
+(7, 'BER', 'MAD', '2023-10-17 01:30:00', 1869, 180, 185, 'Lufthansa', 1),
+(8, 'MAD', 'BUE', '2023-10-17 06:30:00', 10045, 770, 870, 'Lufthansa', 1),
+(9, 'BUE', 'MDQ', '2023-10-17 22:45:00', 450, 65, 92, 'Aerolineas Argentinas', 2);
+
+INSERT INTO `user` (`idUser`, `isAdmin`, `email`, `passwordHash`, `firstName`, `lastName`) VALUES
+('efa7f593-e7a7-11ed-8236-0242ac180004', 1, 'belen@gmail.com', '$argon2id$v=19$m=65536,t=3,p=4$6QkXuDwGweN8F3ygqdj+xQ$QjtZUl+P+837vwYxNsivtH9wuXheGg36uDQGu5So1tY', 'Belen', 'Robledo'),
+('efaf013b-e7a7-11ed-8236-0242ac180004', 1, 'george@gmail.com', '$argon2id$v=19$m=65536,t=3,p=4$V0N+2LvV/2QoqNcJfEyO7g$ZeRNeIXJ62wNHQGUljmy+Oty5qnZI1B5dyzb7p2fwfo', 'George', 'De Maine'),
+('efb5bc01-e7a7-11ed-8236-0242ac180004', 0, 'tim@gmail.com', '$argon2id$v=19$m=65536,t=3,p=4$R2UR3HtKKdxT2PuiZBFVPA$DXIEqAkdSlfORnxq5HJhRHe+KPrzmnjuWbunrvUoluE', 'Tim', 'Paoletto'),
+('efbca663-e7a7-11ed-8236-0242ac180004', 0, 'katherine@gmail.com', '$argon2id$v=19$m=65536,t=3,p=4$reFBc8VWORl6KiBm9GKGUg$c3QAP2CmCYDGlLKund9O8IIAW7isdScP9Z1hMcxuxdg', 'Katherine', 'Diche'),
+('efc38e21-e7a7-11ed-8236-0242ac180004', 0, 'john@gmail.com', '$argon2id$v=19$m=65536,t=3,p=4$9M3Wj72m4uPBa3y3VZV9uw$vSRvg33rAt50Y/ev7bRyUv9pRygQX4zjKRSlIZdLcZM', 'John', 'Heasley');
+
 /*--------------------------------------------------------------------------------------------------------------*/

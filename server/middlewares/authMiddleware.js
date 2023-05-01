@@ -17,7 +17,7 @@ async function authenticate(req, res, next) {
             } else {
                 //refreshToken is valid
                 const {idUser, isAdmin} = refreshTokenData;
-                const newTokens = refreshTokens(refreshToken, idUser, isAdmin);
+                const newTokens = await refreshTokens(refreshToken, idUser, isAdmin);
 
                 if(newTokens){
                     res = setTokenCookies(res, newTokens);

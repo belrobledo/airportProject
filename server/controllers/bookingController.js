@@ -1,23 +1,32 @@
 const bookingDAO = require('../dao/bookingDAO');
-const invoiceDAO = require('../dao/invoiceDAO');
-const ticketDAO = require('../dao/ticketDAO');
+const flightDAO = require('../dao/flightDAO');
 
-async function addBooking(req, res){
-    const { idUser, total, paymentMethod, tickets } = req.body;
 
-    if(!idUser || !total || !paymentMethod || (!tickets || tickets.length <= 0)) {
+async function addBookingTransaction(req, res){
+    const { idUser, total, paymentMethod, idFlight, tickets } = req.body;
+
+    if(!idUser || !total || !paymentMethod || !idFlight || (!tickets || tickets.length <= 0)) {
         return res.status(422).json({ error: "Missing booking information." });
     }
 
     try {
-        const idInvoice = await invoiceDAO.addInvoice(total, paymentMethod);
-        const idBooking = await bookingDAO.addBooking(idUser, idInvoice);
-        for (const ticket of tickets) {
-            await ticketDAO.addTicket(ticket.idFlight, ticket.email, ticket.firstName, ticket.lastName, idBooking);
+        const availableSeats = await flightDAO.getAvailableSeats(idFlight);
+        console.log("available seats: ", availableSeats);
+
+        if(!availableSeats){
+            return res.status(404).json({ error: "Flight not found" });
         }
-        res.status(200).json({ message: "Booking, Invoice and Tickets created" });
+
+        if(tickets.length > availableSeats){
+            console.log("too many tickets: ", availableSeats);
+            return res.status(409).json({ error: "Conflict - not enough available seats in the flight" });
+        }
+        
+        const idBooking = await bookingDAO.addBookingTransaction(idUser, total, paymentMethod, idFlight, tickets);
+        return res.status(201).json({ message: "Booking, Invoice and Tickets created", idBooking: idBooking });
     } catch (err) {
-        res.status(500).json({ error: "Internal server error" });
+        console.error(err);
+        return res.status(500).json({ error: "Internal server error" });
     }
 }
 
@@ -38,4 +47,4 @@ function getAllBookingsByUser(req, res){
 }
 
 
-module.exports = { addBooking, getBookingById, getAllBookingsByUser };
+module.exports = { addBookingTransaction, getBookingById, getAllBookingsByUser };

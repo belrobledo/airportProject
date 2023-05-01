@@ -30,23 +30,23 @@ async function login(req, res) {
             //if credentials didn't match
             res.status(401).json({ error: "Unauthorized - credentials didn't match." });
         }
-    } catch(error) {
-        console.error(`Error logging IN: ${err}`);
+    } catch(err) {
+        console.error(`Error logging in: ${err}`);
         res.status(500).json({ error: "Internal server error" });
     }
 }
 
-function logout(req, res){
+async function logout(req, res){
     try {
         const { accessToken, refreshToken } = parseCookies(req.headers.cookie);
 
-        deleteToken(accessToken);
-        deleteToken(refreshToken);
+        await deleteToken(accessToken);
+        await deleteToken(refreshToken);
         res = deleteTokenCookies(res);
 
         res.status(200).json({ message: "Ok - logged out" });
     } catch (err) {
-        console.error(`Error logging OUT: ${err}`);
+        console.error(`Error logging out: ${err}`);
         res.status(500).json({ error: "Internal server error" });
     }
 }

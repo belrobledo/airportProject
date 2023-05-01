@@ -4,7 +4,7 @@ const Invoice = require('../models/invoice');
 
 function addInvoice(total, paymentMethod) {
   return new Promise((resolve, reject) => {
-    connection.query('CALL spAddInvoice(?, ?);', [total, paymentMethod], (error, results) => {
+    connection.query('CALL spAddInvoice(?, ?, @idInvoice); SELECT @idInvoice AS idInvoice;', [total, paymentMethod], (error, results) => {
       if (error) {
         reject(error);
       }

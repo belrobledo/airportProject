@@ -13,7 +13,4 @@ app.get('/', (req, res) => {
 
 app.use(routes);
 
-//require only once after creating the db container
-//require('./databases/populateTables');
-
 app.listen(port);

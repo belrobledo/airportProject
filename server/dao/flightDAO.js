@@ -14,6 +14,22 @@ function addFlight(idAirportOrigin, idAirportDestination, departureTime, distanc
   });
 }
 
+function getAvailableSeats(idFlight) {
+  return new Promise((resolve, reject) => {
+    connection.query('CALL spGetAvailableSeats(?);', idFlight, (error, results) => {
+      if (error) {
+        reject(error);
+      }
+      
+      let availableSeats = null;
+      if(results[0] && results[0].length){
+        availableSeats = results[0][0].availableSeats;
+      }
+      resolve(availableSeats);
+    });
+  });
+}
+
 function getFlightById(idFlight) {
   return new Promise((resolve, reject) => {
     connection.query('CALL spGetFlightById(?);', idFlight, (error, results) => {
@@ -87,9 +103,9 @@ function getAllFlightsByDestination(destination, departure) {
   });
 }
 
-function getAllFlightsByOriginAndDestination(origin, destination, departure) {
+function getAllDirectFlights(origin, destination, departure) {
   return new Promise((resolve, reject) => {
-    connection.query('CALL spGetAllFlightsByOriginAndDestination(?, ?, ?);', [origin, destination, departure], (error, results) => {
+    connection.query('CALL spGetAllDirectFlights(?, ?, ?);', [origin, destination, departure], (error, results) => {
       if (error) {
         reject(error);
       }
@@ -99,6 +115,26 @@ function getAllFlightsByOriginAndDestination(origin, destination, departure) {
         results[0].forEach(result => {
           let flight = new Flight(result.idFlight, result.idAirportOrigin, result.idAirportDestination, result.departureTime, result.distance, result.duration, result.price, result.airline, result.model, result.capacity);
           flights.push(flight);
+        });
+      }
+      resolve(flights);
+    });
+  });
+}
+
+function getAllConnectingFlights(origin, destination, departure) {
+  return new Promise((resolve, reject) => {
+    connection.query('CALL spGetAllConnectingFlights(?, ?, ?);', [origin, destination, departure], (error, results) => {
+      if (error) {
+        reject(error);
+      }
+
+      let flights = [];
+      if(results[0] && results[0].length){
+        results[0].forEach(result => {
+          let flight1 = new Flight(result.idFlight1, result.idAirportOrigin1, result.idAirportDestination1, result.departureTime1, result.distance1, result.duration1, result.price1, result.airline1, result.model1, result.capacity1);
+          let flight2 = new Flight(result.idFlight2, result.idAirportOrigin2, result.idAirportDestination2, result.departureTime2, result.distance2, result.duration2, result.price2, result.airline2, result.model2, result.capacity2);
+          flights.push([flight1, flight2]);
         });
       }
       resolve(flights);
@@ -232,11 +268,13 @@ function loadFlights(){
 
 module.exports = { 
     addFlight, 
+    getAvailableSeats, 
     getFlightById, 
     getAllFlights, 
     getAllFlightsByOrigin, 
     getAllFlightsByDestination, 
-    getAllFlightsByOriginAndDestination, 
+    getAllDirectFlights, 
+    getAllConnectingFlights, 
     updateFlight, 
     deleteFlight, 
     loadFlights 
