@@ -1,4 +1,27 @@
 # Airport API | Database Documentation
+
+<br>
+
+## Table of Contents
+[Introduction](https://github.com/belrobledo/airportProject/blob/main/documentation-database.md#introduction)  
+
+[Entity-Relantionship Diagram](https://github.com/belrobledo/airportProject/blob/main/documentation-database.md#entity-relantionship-diagram)
+
+[Database Structure](https://github.com/belrobledo/airportProject/blob/main/documentation-database.md#database-structure)  
+* [Entities](https://github.com/belrobledo/airportProject/blob/main/documentation-database.md#entities)
+  * [User](https://github.com/belrobledo/airportProject/blob/main/documentation-database.md#user)
+  * [Airport](https://github.com/belrobledo/airportProject/blob/main/documentation-database.md#airport)
+  * [Flight](https://github.com/belrobledo/airportProject/blob/main/documentation-database.md#flight)
+  * [Airplane](https://github.com/belrobledo/airportProject/blob/main/documentation-database.md#airplane)
+  * [Ticket](https://github.com/belrobledo/airportProject/blob/main/documentation-database.md#ticket)
+  * [Booking](https://github.com/belrobledo/airportProject/blob/main/documentation-database.md#booking)
+  * [Invoice](https://github.com/belrobledo/airportProject/blob/main/documentation-database.md#invoice)
+  * [Employee](https://github.com/belrobledo/airportProject/blob/main/documentation-database.md#employee)
+  * [Address](https://github.com/belrobledo/airportProject/blob/main/documentation-database.md#address)
+  * [City](https://github.com/belrobledo/airportProject/blob/main/documentation-database.md#city)
+  * [Country](https://github.com/belrobledo/airportProject/blob/main/documentation-database.md#country)
+* [Relationships](https://github.com/belrobledo/airportProject/blob/main/documentation-database.md#relationships) 
+
 <br>
 
 ## Introduction
