@@ -5,7 +5,6 @@ const { authenticate, authorizeBoth } = require('../middlewares/authMiddleware')
 
 
 //protected admin & user routes
-//bookingRouter.post('/bookings', authenticate, authorizeBoth, bookingController.addBooking);
 bookingRouter.post('/bookings', authenticate, authorizeBoth, bookingController.addBookingTransaction);
 
 bookingRouter.get('/bookings/id/:idbooking', authenticate, authorizeBoth, bookingController.getBookingById);

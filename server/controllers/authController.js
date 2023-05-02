@@ -31,7 +31,6 @@ async function login(req, res) {
             res.status(401).json({ error: "Unauthorized - credentials didn't match." });
         }
     } catch(err) {
-        console.error(`Error logging in: ${err}`);
         res.status(500).json({ error: "Internal server error" });
     }
 }
@@ -46,7 +45,6 @@ async function logout(req, res){
 
         res.status(200).json({ message: "Ok - logged out" });
     } catch (err) {
-        console.error(`Error logging out: ${err}`);
         res.status(500).json({ error: "Internal server error" });
     }
 }

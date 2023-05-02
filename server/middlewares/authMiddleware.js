@@ -36,7 +36,30 @@ async function authenticate(req, res, next) {
             next();
         }
     } catch (err) {
-        res.status(500).send("Internal Server Error");
+        res.status(500).json({ error: "Internal server error" });
+    }
+}
+
+async function notAunthenticated(req, res, next) {
+    try {
+        const { accessToken, refreshToken } = parseCookies(req.headers.cookie);
+        const accessTokenData = await validateToken(accessToken);
+
+        if(!accessTokenData){
+            //accessToken isn't valid - check refreshToken
+            const refreshTokenData = await validateToken(refreshToken);
+
+            if(!refreshTokenData){
+                //refreshToken isn't valid - Not logged in
+                next();
+            } else {
+                res.status(401).json({ error: "Unauthorized - can't make this request while authenticated" });
+            }
+        } else {
+            res.status(401).json({ error: "Unauthorized - can't make this request while authenticated" });
+        }
+    } catch (err) {
+        res.status(500).json({ error: "Internal server error" });
     }
 }
 
@@ -98,4 +121,4 @@ async function authorizeBoth(req, res, next) {
   }
 }
 
-module.exports = { authenticate, authorizeAdmin, authorizeUser, authorizeBoth };
+module.exports = { authenticate, notAunthenticated, authorizeAdmin, authorizeUser, authorizeBoth };
