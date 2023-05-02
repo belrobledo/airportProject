@@ -41,6 +41,10 @@ function getAllFlights(req, res){
 function getAllFlightsByOrigin(req, res){
     const {origin, departure} = req.query;
 
+    if(!origin || !departure){
+        return res.status(422).json({ error: "Missing 'origin' or 'departure' value" });
+    }
+
     flightDAO.getAllFlightsByOrigin(origin, departure).then( flights => {
         (flights && flights.length) ? res.status(200).json(flights) : res.status(404).json({ error: "No flights found" });
     }).catch( err => {
@@ -50,6 +54,10 @@ function getAllFlightsByOrigin(req, res){
 
 function getAllFlightsByDestination(req, res){
     const {destination, departure} = req.query;
+
+    if(!destination || !departure){
+        return res.status(422).json({ error: "Missing 'destination' or 'departure' value" });
+    }
 
     flightDAO.getAllFlightsByDestination(destination, departure).then( flights => {
         (flights && flights.length) ? res.status(200).json(flights) : res.status(404).json({ error: "No flights found" });
@@ -61,6 +69,10 @@ function getAllFlightsByDestination(req, res){
 function getAllDirectFlights(req, res){
     const {origin, destination, departure} = req.query;
 
+    if(!origin || !destination || !departure){
+        return res.status(422).json({ error: "Missing 'origin', 'destination' or 'departure' value" });
+    }
+
     flightDAO.getAllDirectFlights(origin, destination, departure).then( flights => {
         (flights && flights.length) ? res.status(200).json(flights) : res.status(404).json({ error: "No direct flights found - Check possible connecting flights in '/flights/connection'" });
     }).catch( err => {
@@ -70,6 +82,10 @@ function getAllDirectFlights(req, res){
 
 function getAllConnectingFlights(req, res){
     const {origin, destination, departure} = req.query;
+
+    if(!origin || !destination || !departure){
+        return res.status(422).json({ error: "Missing 'origin', 'destination' or 'departure' value" });
+    }
 
     flightDAO.getAllConnectingFlights(origin, destination, departure).then( flights => {
         (flights && flights.length) ? res.status(200).json(flights) : res.status(404).json({ error: "No flights found" });

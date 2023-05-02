@@ -22,7 +22,7 @@ function getInvoiceById(idInvoice) {
       }
 
       let invoice;
-      if(results[0] && results[0].length){
+      if(results && results[0].length){
         invoice = new Invoice(results[0][0].idInvoice, results[0][0].issuedDate, results[0][0].total, results[0][0].paymentMethod);
       }
       resolve(invoice);
@@ -38,7 +38,7 @@ function getInvoiceByBooking(idBooking) {
       }
 
       let invoice;
-      if(results[0] && results[0].length){
+      if(results && results[0].length){
         invoice = new Invoice(results[0][0].idInvoice, results[0][0].issuedDate, results[0][0].total, results[0][0].paymentMethod);
       }
       resolve(invoice);
@@ -54,7 +54,7 @@ function getAllInvoices() {
       }
 
       let invoices = [];
-      if(results[0] && results[0].length){
+      if(results && results[0].length){
         results[0].forEach(result => {
           let invoice = new Invoice(result.idInvoice, result.issuedDate, result.total, result.paymentMethod);
           invoices.push(invoice);
@@ -73,7 +73,7 @@ function getAllInvoicesByUser(idUser) {
       }
 
       let invoices = [];
-      if(results[0] && results[0].length){
+      if(results && results[0].length){
         results[0].forEach(result => {
           let invoice = new Invoice(result.idInvoice, result.issuedDate, result.total, result.paymentMethod);
           invoices.push(invoice);

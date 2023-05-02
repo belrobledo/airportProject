@@ -22,7 +22,7 @@ function getTicketById(idTicket) {
       }
 
       let ticket;
-      if(results[0] && results[0].length){
+      if(results && results[0].length){
         ticket = new Ticket(results[0][0].idTicket, results[0][0].idFlight, results[0][0].email, results[0][0].firstName, results[0][0].lastName, results[0][0].idBooking);
       }
       resolve(ticket);
@@ -38,7 +38,7 @@ function getAllTicketsByFlight(idFlight) {
       }
 
       let tickets = [];
-      if(results[0] && results[0].length){
+      if(results && results[0].length){
         results[0].forEach(result => {
           let ticket = new Ticket(result.idTicket, result.idFlight, result.email, result.firstName, result.lastName, result.idBooking);
           tickets.push(ticket);
@@ -57,7 +57,7 @@ function getAllTicketsByBooking(idBooking) {
         }
   
         let tickets = [];
-        if(results[0] && results[0].length){
+        if(results && results[0].length){
           results[0].forEach(result => {
             let ticket = new Ticket(result.idTicket, result.idFlight, result.email, result.firstName, result.lastName, result.idBooking);
             tickets.push(ticket);
@@ -76,7 +76,7 @@ function getAllTicketsByUser(idUser) {
       }
 
       let tickets = [];
-      if(results[0] && results[0].length){
+      if(results && results[0].length){
         results[0].forEach(result => {
           let ticket = new Ticket(result.idTicket, result.idFlight, result.email, result.firstName, result.lastName, result.idBooking);
           tickets.push(ticket);

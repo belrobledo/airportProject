@@ -22,7 +22,7 @@ function getAvailableSeats(idFlight) {
       }
       
       let availableSeats = null;
-      if(results[0] && results[0].length){
+      if(results && results[0].length){
         availableSeats = results[0][0].availableSeats;
       }
       resolve(availableSeats);
@@ -38,7 +38,7 @@ function getFlightById(idFlight) {
       }
       
       let flight;
-      if(results[0] && results[0].length){
+      if(results && results[0].length){
         flight = new Flight(results[0][0].idFlight, results[0][0].idAirportOrigin, results[0][0].idAirportDestination, results[0][0].departureTime, results[0][0].distance, results[0][0].duration, results[0][0].price, results[0][0].airline, results[0][0].model, results[0][0].capacity);
       }
       resolve(flight);
@@ -54,7 +54,7 @@ function getAllFlights() {
       }
 
       let flights = [];
-      if(results[0] && results[0].length){
+      if(results && results[0].length){
         results[0].forEach(result => {
           let flight = new Flight(result.idFlight, result.idAirportOrigin, result.idAirportDestination, result.departureTime, result.distance, result.duration, result.price, result.airline, result.model, result.capacity);
           flights.push(flight);
@@ -73,7 +73,7 @@ function getAllFlightsByOrigin(origin, departure) {
       }
 
       let flights = [];
-      if(results[0] && results[0].length){
+      if(results && results[0].length){
         results[0].forEach(result => {
           let flight = new Flight(result.idFlight, result.idAirportOrigin, result.idAirportDestination, result.departureTime, result.distance, result.duration, result.price, result.airline, result.model, result.capacity);
           flights.push(flight);
@@ -92,7 +92,7 @@ function getAllFlightsByDestination(destination, departure) {
       }
 
       let flights = [];
-      if(results[0] && results[0].length){
+      if(results && results[0].length){
         results[0].forEach(result => {
           let flight = new Flight(result.idFlight, result.idAirportOrigin, result.idAirportDestination, result.departureTime, result.distance, result.duration, result.price, result.airline, result.model, result.capacity);
           flights.push(flight);
@@ -111,7 +111,7 @@ function getAllDirectFlights(origin, destination, departure) {
       }
 
       let flights = [];
-      if(results[0] && results[0].length){
+      if(results && results[0].length){
         results[0].forEach(result => {
           let flight = new Flight(result.idFlight, result.idAirportOrigin, result.idAirportDestination, result.departureTime, result.distance, result.duration, result.price, result.airline, result.model, result.capacity);
           flights.push(flight);
@@ -130,7 +130,7 @@ function getAllConnectingFlights(origin, destination, departure) {
       }
 
       let flights = [];
-      if(results[0] && results[0].length){
+      if(results && results[0].length){
         results[0].forEach(result => {
           let flight1 = new Flight(result.idFlight1, result.idAirportOrigin1, result.idAirportDestination1, result.departureTime1, result.distance1, result.duration1, result.price1, result.airline1, result.model1, result.capacity1);
           let flight2 = new Flight(result.idFlight2, result.idAirportOrigin2, result.idAirportDestination2, result.departureTime2, result.distance2, result.duration2, result.price2, result.airline2, result.model2, result.capacity2);

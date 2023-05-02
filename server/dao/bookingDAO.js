@@ -71,7 +71,7 @@ function getBookingById(idBooking) {
       }
 
       let booking;
-      if(results[0] && results[0].length){
+      if(results && results[0].length){
         booking = new Booking(results[0][0].idBooking, results[0][0].idUser, results[0][0].idInvoice);
       }
       resolve(booking);
@@ -87,7 +87,7 @@ function getAllBookingsByUser(idUser) {
       }
 
       let bookings = [];
-      if(results[0] && results[0].length){
+      if(results && results[0].length){
         results[0].forEach(result => {
           let booking = new Booking(result.idBooking, result.idUser, result.idInvoice);
           bookings.push(airplane);

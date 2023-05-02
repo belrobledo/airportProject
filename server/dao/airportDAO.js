@@ -22,7 +22,7 @@ function getAirportById(idAirport) {
       }
 
       let airport;
-      if(results[0] && results[0].length){
+      if(results && results[0].length){
         airport = new Airport(results[0][0].idAirport, results[0][0].name, results[0][0].idAddress, results[0][0].addressLine1, results[0][0].addressLine2, results[0][0].city, results[0][0].postalCode, results[0][0].country);
       }
       resolve(airport);
@@ -38,7 +38,7 @@ function getAirportByCity(city) {
       }
 
       let airport;
-      if(results[0] && results[0].length){
+      if(results && results[0].length){
         airport = new Airport(results[0][0].idAirport, results[0][0].name, results[0][0].idAddress, results[0][0].addressLine1, results[0][0].addressLine2, results[0][0].city, results[0][0].postalCode, results[0][0].country);
       }
       resolve(airport);
@@ -54,7 +54,7 @@ function getAllAirports() {
       }
 
       let airports = [];
-      if(results[0] && results[0].length){
+      if(results && results[0].length){
         results[0].forEach(result => {
           let airport = new Airport(result.idAirport, result.name, result.idAddress, result.addressLine1, result.addressLine2, result.city, result.postalCode, result.country);
           airports.push(airport);

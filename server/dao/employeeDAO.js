@@ -22,7 +22,7 @@ function getEmployeeById(idEmployee) {
       }
 
       let employee;
-      if(results[0] && results[0].length){
+      if(results && results[0].length){
         employee = new Employee(results[0][0].idEmployee, results[0][0].firstName, results[0][0].lastName, results[0][0].position, results[0][0].idAirport);
       }
       resolve(employee);
@@ -38,7 +38,7 @@ function getAllEmployees() {
       }
 
       let employees = [];
-      if(results[0] && results[0].length){
+      if(results && results[0].length){
         results[0].forEach(result => {
           let employee = new Employee(result.idEmployee, result.firstName, result.lastName, result.position, result.idAirport);
           employees.push(employee);
@@ -57,7 +57,7 @@ function getAllEmployeesByAirport(idAirport) {
         }
   
         let employees = [];
-        if(results[0] && results[0].length){
+        if(results && results[0].length){
           results[0].forEach(result => {
             let employee = new Employee(result.idEmployee, result.firstName, result.lastName, result.position, result.idAirport);
             employees.push(employee);

@@ -17,7 +17,7 @@ airportRouter.post('/airports', authenticate, authorizeAdmin, airportController.
 
 airportRouter.put('/airports', authenticate, authorizeAdmin, airportController.updateAirport);
 
-airportRouter.delete('/airports', authenticate, authorizeAdmin, airportController.deleteAirport);
+airportRouter.delete('/airports/:idairport', authenticate, authorizeAdmin, airportController.deleteAirport);
 
 
 module.exports = airportRouter;

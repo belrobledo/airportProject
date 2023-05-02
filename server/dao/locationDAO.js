@@ -9,7 +9,7 @@ function getAllCountries() {
       }
 
       let countries = [];
-      if(results[0] && results[0].length){
+      if(results && results[0].length){
         results[0].forEach(result => {
           let country = { name:  result.name };
           countries.push(country);
@@ -28,7 +28,7 @@ function getAllCities() {
       }
 
       let cities = [];
-      if(results[0] && results[0].length){
+      if(results && results[0].length){
         results[0].forEach(result => {
           let city = { name: result.name, postalCode: result.postalCode, country: result.country };
           cities.push(city);

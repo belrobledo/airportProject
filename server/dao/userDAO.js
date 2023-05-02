@@ -25,7 +25,7 @@ function getUserById(idUser) {
       }
 
       let user;
-      if(results[0] && results[0].length){
+      if(results && results[0].length){
         user = new User(results[0][0].idUser, results[0][0].isAdmin, results[0][0].email, results[0][0].firstName, results[0][0].lastName);
       }
       resolve(user);
@@ -41,7 +41,7 @@ function getUserByBooking(idBooking) {
       }
 
       let user;
-      if(results[0] && results[0].length){
+      if(results && results[0].length){
         user = new User(results[0][0].idUser, results[0][0].isAdmin, results[0][0].email, results[0][0].firstName, results[0][0].lastName);
       }
       resolve(user);
@@ -57,7 +57,7 @@ function getAllUsers() {
       }
 
       let users = [];
-      if(results[0] && results[0].length){
+      if(results && results[0].length){
         results[0].forEach(result => {
           let user = new User(result.idUser, result.isAdmin, result.email, result.firstName, result.lastName);
           users.push(user);
@@ -88,7 +88,7 @@ function getPasswordHashById(idUser) {
       }
 
       let passwordHash = null;
-      if(results[0] && results[0].length){
+      if(results && results[0].length){
         passwordHash = results[0][0].passwordHash;
       }
       resolve(passwordHash);
@@ -128,7 +128,7 @@ function userLogin(email) {
       }
 
       let user;
-      if(results[0] && results[0].length){
+      if(results && results[0].length){
         user = {idUser: results[0][0].idUser, isAdmin: results[0][0].isAdmin, email: results[0][0].email, passwordHash: results[0][0].passwordHash};
       }
       resolve(user);
@@ -144,7 +144,7 @@ function getIdUserbyInvoice(idInvoice) {
       }
 
       let idUser = null;
-      if(results[0] && results[0].length){
+      if(results && results[0].length){
         idUser = results[0][0].idUser;
       }
       resolve(idUser);
@@ -160,7 +160,7 @@ function getIdUserbyBooking(idBooking) {
       }
 
       let idUser = null;
-      if(results[0] && results[0].length){
+      if(results && results[0].length){
         idUser = results[0][0].idUser;
       }
       resolve(idUser);
@@ -176,7 +176,7 @@ function getIdUserByTicket(idTicket) {
       }
 
       let idUser = null;
-      if(results[0] && results[0].length){
+      if(results && results[0].length){
         idUser = results[0][0].idUser;
       }
       resolve(idUser);

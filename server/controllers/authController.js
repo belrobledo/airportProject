@@ -7,28 +7,32 @@ async function login(req, res) {
     const {email, password} = req.body;
 
     if (!email || !password) {
-        return res.status(422).json({ error: 'Unprocessable Entity - need to provide email and password.' });
+        return res.status(422).json({ error: 'Unprocessable Entity - need to provide email and password' });
     }
 
     try {
         const user = await userLogin(email);
-        const isVerified = await argon2.verify(user.passwordHash, password);
-
-        if(isVerified){
-            //generate tokens
-            const tokens = generateTokens();
-
-            //store tokens in Redis
-            storeTokens(tokens, user.idUser, user.isAdmin);
-
-            //set cookies with tokens in response header
-            res = setTokenCookies(res, tokens);
-
-            //login succesful
-            res.status(200).json({ message: "Ok - logged in" });
+        if(!user){
+            res.status(404).json({ error: "User not found" });
         } else {
-            //if credentials didn't match
-            res.status(401).json({ error: "Unauthorized - credentials didn't match." });
+            const isVerified = await argon2.verify(user.passwordHash, password);
+
+            if(isVerified){
+                //generate tokens
+                const tokens = generateTokens();
+    
+                //store tokens in Redis
+                storeTokens(tokens, user.idUser, user.isAdmin);
+    
+                //set cookies with tokens in response header
+                res = setTokenCookies(res, tokens);
+    
+                //login succesful
+                res.status(200).json({ message: "Ok - logged in" });
+            } else {
+                //if credentials didn't match
+                res.status(401).json({ error: "Unauthorized - credentials didn't match" });
+            }
         }
     } catch(err) {
         res.status(500).json({ error: "Internal server error" });

@@ -22,7 +22,7 @@ function getAirplaneById(idAirplane) {
       }
 
       let airplane;
-      if(results[0] && results[0].length){
+      if(results && results[0].length){
         airplane = new Airplane(results[0][0].idAirplane, results[0][0].model, results[0][0].capacity);
       }
       resolve(airplane);
@@ -38,7 +38,7 @@ function getAirplaneByModel(model) {
       }
 
       let airplane;
-      if(results[0] && results[0].length){
+      if(results && results[0].length){
         airplane = new Airplane(results[0][0].idAirplane, results[0][0].model, results[0][0].capacity);
       }
       resolve(airplane);
@@ -54,7 +54,7 @@ function getAllAirplanes() {
       }
 
       let airplanes = [];
-      if(results[0] && results[0].length){
+      if(results && results[0].length){
         results[0].forEach(result => {
           let airplane = new Airplane(result.idAirplane, result.model, result.capacity);
           airplanes.push(airplane);
