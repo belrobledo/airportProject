@@ -1,6 +1,6 @@
-# Airport Project ✈
+# Airport Project
 
-🛠 Work in Progress 🛠
+(Work in Progress)
 
 Airport ticketing web application built using Express.js and MySQL, developed for Solvd NodeJS Internship Course. Allows users to buy flight tickets as well as get information about flights, routes and pricing.  
 
@@ -34,7 +34,7 @@ Airport ticketing web application built using Express.js and MySQL, developed fo
 [Author](https://github.com/belrobledo/airportProject#author)
 
 
-## Roles and functionalities 👨‍💻
+## Roles and functionalities
 
 You should be able to log in as two principal roles, users and admins, with the following functionalities:
 
@@ -50,7 +50,7 @@ You should be able to log in as two principal roles, users and admins, with the 
 - Add, edit and delete airport information.
 
 
-## Installing this Project ✨
+## Installing this Project
 
 You can clone the repository. Cloning will give you a copy of the project up and running on
 your local machine for development and testing purposes. You must have npm and Docker installed in your computer.
@@ -78,7 +78,7 @@ This project implements an OAuth 2.0 authentication flow.
 4. The server stores the tokens in Redis Database, along with the user's ID and user's Role. Finally, the server sends the tokens to the Client as HTTP Cookies.  
 5. The client can then use the access token to authorizate and make requests to protected resources. If Access token has expired, the client can use the Refresh token to obtain a new pair of tokens. If Refresh token has also expired, the client must authenticate again with his login credentials.    
 
-## API Documentation 📝
+## API Documentation
 
 ### Endpoints
 
@@ -239,7 +239,7 @@ Fields: id, model, capacity.
 
 To see all the details about the database documentation, please check [this markdown](https://github.com/belrobledo/airportProject/blob/master/database-info.md).
 
-## Built With 💻
+## Built With
 
   - [Node JS](https://nodejs.org/) - JavaScript runtime environment.
   - [Express](http://expressjs.com/) - Web framework for node.js
