@@ -23,10 +23,12 @@ jobs:
       run: docker exec server-container curl http://localhost:3000
       
     - name: Run test - POST Request to '/login' as ADMIN
-      run: docker exec server-container curl -X POST -H 'Content-Type:application/json' -d '{"email":"belen@gmail.com", "password":"123"}' http://localhost:3000/login
+      run: response=$(docker exec server-container curl -i -X POST -H 'Content-Type:application/json' -d '{"email":"belen@gmail.com", "password":"123"}' http://localhost:3000/login)
+            accessToken=$(echo "$response" | grep -oP 'Set-Cookie:accessToken=\K[^;]+'; HttpOnly; Max-Age=900; SameSite=lax;')
+            refreshToken=$(echo "$response" | grep -oP 'Set-Cookie:refreshToken=\K[^;]+'; HttpOnly; Max-Age=21600; SameSite=lax;')
 
     - name: Run test - GET Request to '/users/id/:iduser'
-      run: docker exec server-container curl http://localhost:3000/users/id/1
+      run: docker exec server-container curl -b "accessToken=$accessToken; refreshToken=$refreshToken;" http://localhost:3000/users/id/1
 
     - name: Stop and remove containers
       run: docker-compose down -v
