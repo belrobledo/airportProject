@@ -35,7 +35,7 @@ jobs:
       run: docker exec server-container curl -b cookies.txt http://localhost:3000/flights/id/10
     
     - name: Run test - PUT Request to '/flights'
-      run: docker exec server-container curl -b cookies.txt -X PUT -H 'Content-Type:application/json' -d '{"idAirportOrigin":"BUE", "idAirportDestination":"MDQ", "departureTime":"2023-10-31 22:00:00", "distance":450, "duration":90, "price":50, "airline":"Aerolineas Argentinas", "idAirplane":2}' http://localhost:3000/flights
+      run: docker exec server-container curl -b cookies.txt -X PUT -H 'Content-Type:application/json' -d '{"idFlight":10, "idAirportOrigin":"BUE", "idAirportDestination":"MDQ", "departureTime":"2023-10-31 22:00:00", "distance":450, "duration":90, "price":50, "airline":"Aerolineas Argentinas", "idAirplane":2}' http://localhost:3000/flights
 
     - name: Run test - GET Request to '/flights/direct'
       run: docker exec server-container curl -b cookies.txt http://localhost:3000/flights/direct?origin=BUE\&destination=MDQ\&departure=2023-10-31
