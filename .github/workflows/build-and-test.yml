@@ -25,10 +25,24 @@ jobs:
     - name: Run test - POST Request to '/login' as ADMIN
       run: docker exec server-container curl -i -c cookies.txt -X POST -H 'Content-Type:application/json' -d '{"email":"belen@gmail.com", "password":"123"}' http://localhost:3000/login
 
-    - name: Run test - GET Request to '/users/id/:iduser'
-      run: docker exec server-container curl -b cookies.txt http://localhost:3000/users/id/1
+    - name: Run test - GET Request to '/airplanes/id/:idairplane'
+      run: docker exec server-container curl -b cookies.txt http://localhost:3000/airplanes/id/2
+
+    - name: Run test - POST Request to '/flights'
+      run: docker exec server-container curl -b cookies.txt -X POST -H 'Content-Type:application/json' -d '{"idAirportOrigin":"BUE", "idAirportDestination":"LAX", "departureTime":"2023-10-31 22:00:00", "distance":8362, "duration":830, "price":1090, "airline":"Aerolineas Argentinas", "idAirplane":2}' http://localhost:3000/flights
+
+    - name: Run test - GET Request to '/flights/id/:idflight'
+      run: docker exec server-container curl -b cookies.txt http://localhost:3000/flights/id/10
+    
+    - name: Run test - PUT Request to '/flights'
+      run: docker exec server-container curl -b cookies.txt -X POST -H 'Content-Type:application/json' -d '{"idAirportOrigin":"BUE", "idAirportDestination":"MDQ", "departureTime":"2023-10-31 22:00:00", "distance":450, "duration":90, "price":50, "airline":"Aerolineas Argentinas", "idAirplane":2}' http://localhost:3000/flights
+
+    - name: Run test - GET Request to '/flights/direct'
+      run: docker exec server-container curl -b cookies.txt http://localhost:3000/flights/direct?origin=BUE&destination=MDQ&departure=2023-10-31
 
     - name: Stop and remove containers
       run: docker-compose down -v
+
+      /flights/id/:idflight
 
       
