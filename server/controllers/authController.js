@@ -7,7 +7,7 @@ async function login(req, res) {
     const {email, password} = req.body;
 
     if (!email || !password) {
-        return res.status(422).json({ error: 'Unprocessable Entity - need to provide email and password' });
+        return res.status(422).json({ error: `Unprocessable Entity - need to provide email and password - email: ${email} - pass: ${password}` });
     }
 
     try {
