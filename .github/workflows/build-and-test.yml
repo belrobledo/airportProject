@@ -19,8 +19,11 @@ jobs:
     - name: Build and run containers
       run: docker-compose up --build -d
 
-    - name: Run tests
+    - name: Run test - GET '/'
       run: docker exec server-container curl http://localhost:3000
+      
+    - name: Run test - POST '/login' as ADMIN
+      run: docker exec server-container curl -X POST -H "Content-Type: application/json" -d '{"email": "belen@gmail.com", "password": "123"}' http://localhost:3000/login
 
     - name: Stop and remove containers
       run: docker-compose down -v
