@@ -45,6 +45,6 @@ jobs:
 
     - name: Run test - GET Request to '/users'
       run: docker exec server-container curl -b cookies.txt http://localhost:3000/users
-
+ 
     - name: Stop and remove containers
       run: docker-compose down -v
