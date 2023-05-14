@@ -10,7 +10,7 @@ Airport API built using Express and MySQL developed for Solvd NodeJS Internship 
 
 [OAuth 2.0 Authorization Protocol](https://github.com/belrobledo/airportProject#oauth-20-authorization-protocol)  
 * [OAuth 2.0 Flow](https://github.com/belrobledo/airportProject#oauth-20-flow)
-* [OAuth 2.0 Authorization Levels](https://github.com/belrobledo/airportProject#oauth-20-authorization-level)
+* [OAuth 2.0 Authorization Levels](https://github.com/belrobledo/airportProject#oauth-20-authorization-levels)
 
 [API Documentation](https://github.com/belrobledo/airportProject#api-documentation) 
 
