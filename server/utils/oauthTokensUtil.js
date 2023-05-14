@@ -12,21 +12,21 @@ function generateTokens() {
 }
 
 //Store tokens pair in redis db
-function storeTokens(tokens, userId, userRole){
+async function storeTokens(tokens, idUser, isAdmin){
     try {
-        redisClient.set(
+        await redisClient.set(
             tokens.accessToken, 
-            JSON.stringify({tokenType: "access", userId: userId, userRole: userRole}),
+            JSON.stringify({tokenType: "access", idUser: idUser, isAdmin: isAdmin}),
             'EX', accessTokenExpiration
         );
-        redisClient.expire(tokens.accessToken, accessTokenExpiration);
+        await redisClient.expire(tokens.accessToken, accessTokenExpiration);
 
-        redisClient.set(
+        await redisClient.set(
             tokens.refreshToken,
-            JSON.stringify({tokenType: "refresh", userId: userId, userRole: userRole}),
+            JSON.stringify({tokenType: "refresh", idUser: idUser, isAdmin: isAdmin}),
             'EX', refreshTokenExpiration
         );
-        redisClient.expire(tokens.refreshToken, refreshTokenExpiration);
+        await redisClient.expire(tokens.refreshToken, refreshTokenExpiration);
 
     } catch (error) {
         console.error(`Error storing tokens in Redis: ${error}`);
@@ -68,11 +68,11 @@ async function validateToken(token = "") {
     }
 }
 
-function refreshTokens(refreshToken, userId, userRole){
+async function refreshTokens(refreshToken, idUser, isAdmin){
     try{
-        deleteToken(refreshToken);
+        await deleteToken(refreshToken);
         const tokens = generateTokens();
-        storeTokens(tokens, userId, userRole);
+        await storeTokens(tokens, idUser, isAdmin);
 
         return tokens;
     } catch (err) {
@@ -82,9 +82,9 @@ function refreshTokens(refreshToken, userId, userRole){
 }
 
 //Delete a token from redis storage
-function deleteToken(token){
+async function deleteToken(token = ""){
     try {
-        redisClient.del(token);
+        await redisClient.del(token);
     } catch (err) {
         console.error(`Error deleting token in Redis: ${err}`);
         throw err;

@@ -1,6 +1,6 @@
 function parseCookies(cookieHeader){
-    console.log("cookie header: ", cookieHeader);
     const cookies = {};
+    
     if(cookieHeader){
         cookieHeader.split(';').forEach(cookie => {
             const parts = cookie.split('=');

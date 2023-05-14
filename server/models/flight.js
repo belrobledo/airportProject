@@ -1,6 +1,6 @@
 class Flight {
 
-    constructor(idFlight = "", idAirportOrigin, idAirportDestination, departureTime, distance, duration, price, airline, idAirplane){
+    constructor(idFlight = null, idAirportOrigin, idAirportDestination, departureTime, distance, duration, price, airline, airplaneModel, airplaneCapacity){
         this.idFlight = idFlight;
         this.idAirportOrigin = idAirportOrigin;
         this.idAirportDestination = idAirportDestination;
@@ -9,7 +9,12 @@ class Flight {
         this.duration = duration;
         this.price = price;
         this.airline = airline;
-        this.idAirplane = idAirplane;
+        this.airplane = {
+            model: airplaneModel,
+            capacity: airplaneCapacity
+        }
     }
 
 }
+
+module.exports = Flight;
